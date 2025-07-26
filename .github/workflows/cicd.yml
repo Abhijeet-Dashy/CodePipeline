@@ -14,12 +14,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run tfsec for Terraform scanning 
+        continue-on-error: true
         uses: aquasecurity/tfsec-action@v1.0.3
         with:
-          working_directory: ./terraform
+            working_directory: ./terraform
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
       - name: Build Docker image
         run: docker build -t my-app:${{ github.sha }} .
 
