@@ -1,0 +1,24 @@
+# Terraform build folders and state files
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+*.tfvars
+
+# Terraform lock files
+terraform.tfstate
+terraform.tfstate.backup
+.terraform.lock.hcl
+
+# Provider binaries
+*.exe
+
+# Logs and crash reports
+*.log
+crash.log
+
+# Certificates and secrets
+*.pem
+
+# Optional: Ignore sealed-secrets cert if you re-fetch
+pub-cert.pem
