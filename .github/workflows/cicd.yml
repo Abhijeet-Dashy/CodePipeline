@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t my-app:${{ github.sha }} .
-      
+
       - name: Run Trivy for Docker image scanning
         uses: aquasecurity/trivy-action@master
         with:
@@ -35,15 +35,21 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-south-1
 
       - name: Setup kubectl
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: azure/k8s-setup@v1
+        uses: azure/setup-kubectl@v3
         with:
-          kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
-      
+          version: 'latest'
+
+      - name: Configure kubeconfig
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > ~/.kube/config
+
       - name: Apply Kubernetes Sealed Secret 🔐
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: kubectl apply -f ./kubernetes/
