@@ -58,6 +58,12 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: kubectl apply -f ./kubernetes/
 
+      - name: Setup Terraform
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.7
+
       - name: Terraform Apply Infrastructure
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
